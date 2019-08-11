@@ -1,4 +1,8 @@
-# Golang Fast CRUD
+# Giligili_back
+
+https://github.com/mythpath/giligili_back.git
+
+## 参考项目 golang fast crud
 
 https://github.com/bydmm/go-crud
 
@@ -6,7 +10,7 @@ https://github.com/bydmm/go-crud
 
 [让我们写个G站吧！Golang全栈编程实况](https://space.bilibili.com/10/channel/detail?cid=78794)
 
-## 使用Go CRUD开发的项目实例
+## 参考项目实例
 
 https://github.com/bydmm/giligili
 
