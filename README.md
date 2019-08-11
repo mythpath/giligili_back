@@ -1,6 +1,6 @@
 # Giligili_back
 
-https://github.com/mythpath/giligili_back.git
+https://github.com/mythpath/giligili_back
 
 ## 参考项目 golang fast crud
 
