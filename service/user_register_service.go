@@ -45,15 +45,15 @@ func (service *UserRegisterService) Valid() *serializer.Response {
 
 // Register 用户注册
 func (service *UserRegisterService) Register() (model.User, *serializer.Response) {
+	// 表单验证
+	if err := service.Valid(); err != nil {
+		return model.User{}, err
+	}
+
 	user := model.User{
 		Nickname: service.Nickname,
 		UserName: service.UserName,
 		Status:   model.Active,
-	}
-
-	// 表单验证
-	if err := service.Valid(); err != nil {
-		return user, err
 	}
 
 	// 加密密码

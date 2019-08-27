@@ -13,8 +13,22 @@ type ListVideoService struct {
 
 // List 视频列表
 func (service *ListVideoService) List() serializer.Response {
-	var videos []model.Video
+	videos = []model.videos{}
+	total := 0
 
+	if service.Limit == 0 {
+		service.Limit = 6
+	}
+
+	if err:=model.DB.Model(model.video{}).Count(&total).Error;err!=nil{
+		return serializer.Response{
+			Status: 50000,
+			Msg:    "数据库连接错误",
+			Error:  err.Error(),
+		}
+	}
+
+	//err := model.DB.Limit(service.Limit).Offset(service.Start).Find(&videos).Error
 	err := model.DB.Limit(service.Limit).Offset(service.Start).Find(&videos).Error
 	if err != nil {
 		return serializer.Response{
@@ -24,7 +38,8 @@ func (service *ListVideoService) List() serializer.Response {
 		}
 	}
 
-	return serializer.Response{
-		Data: serializer.BuildVideos(videos),
+	return serializer.BuildListResponse{
+		serializer.BuildVideos(videos),
+		uint(total)
 	}
 }
