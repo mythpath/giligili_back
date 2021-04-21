@@ -17,7 +17,7 @@
     "bucket": ""
   },
   "video": {
-    "defaultAvatar": "/Users/liyuxin/Code/FrontEnds/private/giligili_front/src/assets/avatar.jpeg"
+    "defaultAvatar": "resources/assets/avatar.jpeg"
   },
   "http": {
     "port": 8081
