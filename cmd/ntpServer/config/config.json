@@ -1,0 +1,18 @@
+{
+	"db": {
+		"user": "root",
+		"password": "axMCJmZ6DOlzEm5neE03+w==",
+		"url": "tcp(127.0.0.1:3306)/ntp_server?charset=utf8&parseTime=true&loc=Local&timeout=5s&readTimeout=30s&writeTimeout=5s",
+		"log": false
+	},
+	"http": {
+		"port": 3232,
+		"type": "in"
+	},
+	"log": {
+		"logName": "./log/app.log",
+		"rotationSize": "10M",
+		"maxAge": "336h",
+		"level": "debug"
+	}
+}

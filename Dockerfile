@@ -26,7 +26,7 @@ RUN echo "http://mirrors.aliyun.com/alpine/v3.7/main/" > /etc/apk/repositories &
 WORKDIR /www
 
 COPY --from=build /Users/liyuxin/go/src/selfText/giligili_back/api_server /usr/bin/api_server
-ADD ./conf /www/conf
+ADD cmd/conf /www/conf
 
 RUN chmod +x /usr/bin/api_server
 

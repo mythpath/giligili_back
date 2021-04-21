@@ -1,0 +1,31 @@
+{
+  "db": {
+    "user": "root",
+    "password": "axMCJmZ6DOlzEm5neE03+w==",
+    "url": "tcp(127.0.0.1:3306)/giligili?charset=utf8&parseTime=true&loc=Local&timeout=5s&readTimeout=30s&writeTimeout=5s",
+    "log": false
+  },
+  "redis": {
+    "redisDB": "",
+    "address": "127.0.0.1:6379",
+    "password": ""
+  },
+  "OSS": {
+    "endpoint": "",
+    "accessKeyID": "",
+    "accessKeySecret": "",
+    "bucket": ""
+  },
+  "video": {
+    "defaultAvatar": "/Users/liyuxin/Code/FrontEnds/private/giligili_front/src/assets/avatar.jpeg"
+  },
+  "http": {
+    "port": 8081
+  },
+  "log": {
+    "logName": "./log/app.log",
+    "rotationSize": "10M",
+    "maxAge": "336h",
+    "level": "debug"
+  }
+}
