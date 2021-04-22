@@ -1,0 +1,7 @@
+{
+  "db": {
+    "user": "root",
+    "password": "T3G0xIqpFkFly+keELZozQ==",
+    "url": "tcp(100.73.141.114:3306)/nerv_pubsub?charset=utf8&parseTime=true&loc=Local"
+  }
+}

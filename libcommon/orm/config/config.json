@@ -1,0 +1,10 @@
+{
+    "db": {
+        "user": "root",
+        "password": "!QAZ2wsx3eDc",
+        "url": "tcp(localhost:3306)/test?charset=utf8&parseTime=True&loc=Local",
+        "encrypt": false,
+        "autoMigrate": true,
+        "log": false
+    }
+}

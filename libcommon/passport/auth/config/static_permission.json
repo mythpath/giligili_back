@@ -1,0 +1,52 @@
+{
+    "test-module": {
+        "name": "test-module",
+        "label": "测试模块",
+        "ip": "http://localhost:8888",
+        "resources": [
+            {
+                "name": "1",
+                "label": "一",
+                "isSystem": true,
+                "operations": [
+                    {
+                        "name": "action3",
+                        "label": "操作3"
+                    }
+                ]
+            },
+            {
+                "name": "1",
+                "label": "一",
+                "isSystem": false,
+                "operations": [
+                    {
+                        "name": "action2",
+                        "label": "操作2"
+                    },
+                    {
+                        "name": "action1",
+                        "label": "操作1"
+                    }
+                ]
+            },
+            {
+                "name": "2",
+                "label": "二",
+                "isSystem": false,
+                "operations": [
+                    {
+                        "name": "action1",
+                        "label": "操作1"
+                    }
+                ]
+            },
+            {
+                "name": "3",
+                "label": "三",
+                "isSystem": true,
+                "operations": []
+            }
+        ]
+    }
+}
