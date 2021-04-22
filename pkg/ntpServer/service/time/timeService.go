@@ -2,8 +2,8 @@ package time
 
 import (
 	"context"
+	"encoding/binary"
 	"fmt"
-	"io"
 	"net"
 	"selfText/giligili_back/libcommon/brick"
 	"selfText/giligili_back/libcommon/logging"
@@ -12,8 +12,8 @@ import (
 	"selfText/giligili_back/pkg/ntpServer/protocal"
 	"selfText/giligili_back/service/common/util"
 	"selfText/giligili_back/service/ntp/serializer"
-	"strconv"
 	"strings"
+	"time"
 )
 
 type TimeService struct {
@@ -149,7 +149,6 @@ func (t *TimeService) List(ctx context.Context, input protocal.ListInput) (seria
 }
 
 func (t *TimeService) Now(ctx context.Context, input protocal.TimeNowInput) (serializer.Response, error) {
-	t.Logger.Infoln("start get time from target time server.")
 	var timeServer model.TimeServer
 	if err := t.Orm.GetDB().Where("id = ?", input.ID).First(&timeServer).Error; err != nil {
 		return serializer.Response{
@@ -159,8 +158,7 @@ func (t *TimeService) Now(ctx context.Context, input protocal.TimeNowInput) (ser
 		}, err
 	}
 
-	t.Logger.Infoln("try to connect target time server.")
-	conn, err := net.Dial("tcp", timeServer.URL)
+	conn, err := net.Dial("udp", timeServer.URL+":123")
 	if err != nil {
 		return serializer.Response{
 			Status: 50001,
@@ -168,6 +166,7 @@ func (t *TimeService) Now(ctx context.Context, input protocal.TimeNowInput) (ser
 			Error:  err.Error(),
 		}, err
 	}
+	t.Logger.Infoln("after dial udp server.")
 
 	defer func() {
 		if err := recover(); err != nil {
@@ -176,34 +175,52 @@ func (t *TimeService) Now(ctx context.Context, input protocal.TimeNowInput) (ser
 		conn.Close()
 	}()
 
-	var ntp model.NTP
-	conn.Write(ntp.GetBytes())
-	buffer := make([]byte, 2048)
-	ret, err := conn.Read(buffer)
-	if err != nil {
+	if err := conn.SetDeadline(time.Now().Add(15 * time.Second)); err != nil {
 		return serializer.Response{
 			Status: 50001,
 			Msg:    "查询指定时间服务记录失败",
 			Error:  err.Error(),
 		}, err
 	}
+	// configure request settings by specifying the first byte as
+	// 00 011 011 (or 0x1B)
+	// |  |   +-- client mode (3)
+	// |  + ----- version (3)
+	// + -------- leap year indicator, 0 no warning
+	req := &model.NtpPacket{Settings: 0x1B}
 
-	if ret > 0 {
-		ntp.Parse(buffer, true)
-		_, err := io.WriteString(conn, strconv.FormatUint(ntp.TransmitTimestamp, 10))
-		if err != nil {
-			return serializer.Response{
-				Status: 50001,
-				Data:   "",
-				Msg:    "数据写回失败",
-				Error:  err.Error(),
-			}, nil
-		}
+	// send time request
+	if err := binary.Write(conn, binary.BigEndian, req); err != nil {
+		return serializer.Response{
+			Status: 50001,
+			Data:   "查询指定时间服务记录失败",
+			Msg:    fmt.Sprintf("failed to send request: %v", err),
+		}, err
 	}
+
+	// block to receive server response
+	rsp := &model.NtpPacket{}
+	if err := binary.Read(conn, binary.BigEndian, rsp); err != nil {
+		return serializer.Response{
+			Status: 50001,
+			Data:   "查询指定时间服务记录失败",
+			Msg:    fmt.Sprintf("failed to read server response: %v", err),
+		}, err
+	}
+
+	// On POSIX-compliant OS, time is expressed
+	// using the Unix time epoch (or secs since year 1970).
+	// NTP seconds are counted since 1900 and therefore must
+	// be corrected with an epoch offset to convert NTP seconds
+	// to Unix time by removing 70 yrs of seconds (1970-1900)
+	// or 2208988800 seconds.
+	secs := float64(rsp.TxTimeSec) - model.UNIX_STA_TIMESTAMP
+	nanos := (int64(rsp.TxTimeFrac) * 1e9) >> 32 // convert fractional to nanos
+	//fmt.Printf("%v\n", time.Unix(int64(secs), nanos))
 
 	return serializer.Response{
 		Status: 200,
-		Data:   ntp.TransmitTimestamp,
+		Data:   fmt.Sprintf("%v\n", time.Unix(int64(secs), nanos)),
 		Msg:    "target time server: " + timeServer.URL,
 	}, nil
 }

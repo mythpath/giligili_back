@@ -13,7 +13,7 @@ type SerializerService struct {
 	Logger *logging.LoggerService `inject:"LoggerService"`
 }
 
-// BuildVideo 序列化视频
+// BuildTimeServer 序列化时间服务器
 func (s *SerializerService) BuildTimeServer(item model.TimeServer) TimeServer {
 	var timeServer model.TimeServer
 	if err := s.Orm.GetDB().Where("id = ?", item.ID).First(&timeServer).Error; err != nil {
@@ -27,7 +27,7 @@ func (s *SerializerService) BuildTimeServer(item model.TimeServer) TimeServer {
 	}
 }
 
-// BuildVideos 序列化视频列表
+// BuildTimeServers 序列化时间服务器列表
 func (s *SerializerService) BuildTimeServers(items []model.TimeServer) (timeServers []TimeServer) {
 	for _, item := range items {
 		timeServer := s.BuildTimeServer(item)

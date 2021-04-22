@@ -7,7 +7,7 @@
 	},
 	"http": {
 		"port": 3232,
-		"type": "in"
+		"type": "out"
 	},
 	"log": {
 		"logName": "./log/app.log",

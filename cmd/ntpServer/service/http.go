@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
+	"github.com/sirupsen/logrus"
 	"net"
 	"net/http"
 	"net/http/pprof"
@@ -44,32 +45,48 @@ func (h *Http) Init() error {
 		go func() {
 			h.Logger.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", port), r))
 		}()
-	} else {
-		addr, err := net.ResolveTCPAddr("tcp", string(rune(port)))
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "Fatal error: %s", err.Error())
-			os.Exit(1)
-		}
 
-		srv, err := net.ListenTCP("tcp", addr)
+		h.Logger.Debugf("ntp listening at %d", port)
+	} else {
+		//addr, err := net.ResolveUDPAddr("tcp", ":"+string(rune(port)))
+		//if err != nil {
+		//	fmt.Fprintf(os.Stderr, "Fatal error: %s", err.Error())
+		//	os.Exit(1)
+		//}
+
+		srv, err := net.ListenUDP("udp", &net.UDPAddr{
+			IP:   net.IPv4(127, 0, 0, 1),
+			Port: port,
+		})
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Fatal error: %s", err.Error())
 			os.Exit(1)
 		}
+		defer srv.Close()
+		h.Logger.Debugf("ntp listening at %d", port)
 
 		for {
-			conn, err := srv.Accept()
+			data := make([]byte, 4096)
+			read, remoteAddr, err := srv.ReadFromUDP(data)
 			if err != nil {
+				fmt.Fprintf(os.Stderr, "Fatal error: %s", err.Error())
 				continue
 			}
+			h.Logger.WithFields(logrus.Fields{
+				"read":       read,
+				"remoteAddr": remoteAddr,
+			}).Infoln("read from udp")
+			h.Logger.WithField("data", data).Infoln("content.")
 
 			dt := time.Now().String()
-			_, _ = conn.Write([]byte(dt))
-			_ = conn.Close()
+			sendData := []byte(dt)
+			_, err = srv.WriteToUDP(sendData, remoteAddr)
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "Fatal error: %s", err.Error())
+				return err
+			}
 		}
 	}
-
-	h.Logger.Debugf("ntp listening at %d", port)
 
 	return nil
 }
