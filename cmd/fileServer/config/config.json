@@ -1,0 +1,39 @@
+{
+  "http": {
+    "port": "3233"
+  },
+  "files": {
+    "/api/blueprint": "${NERV_FILE}/resources/blueprint",
+    "/api/templates": "${NERV_FILE}/resources/templates",
+    "/api/scripts": "${NERV_FILE}/resources/scripts",
+    "/api/config": "${NERV_FILE}/resources/config",
+    "/api/metrics": "${NERV_FILE}/resources/metrics",
+    "/api/pkg": "${NERV_FILE}/pkg",
+    "/api/dashboards": "${NERV_FILE}/dashboards",
+    "/api/deployments": "${NERV_FILE}/deployments",
+    "/api/deploy_config": "${NERV_FILE}/deploy_config",
+    "/api/paas": "${NERV_FILE}/paas"
+  },
+  "uploads": {
+    "/upload/blueprint": "${NERV_FILE}/resources/blueprint",
+    "/upload/templates": "${NERV_FILE}/resources/templates",
+    "/upload/scripts": "${NERV_FILE}/resources/scripts",
+    "/upload/config": "${NERV_FILE}/resources/config",
+    "/upload/metrics": "${NERV_FILE}/resources/metrics",
+    "/upload/pkg": "${NERV_FILE}/pkg",
+    "/upload/dashboards": "${NERV_FILE}/dashboards",
+    "/upload/deploy_config": "${NERV_FILE}/deploy_config",
+    "/api/paas": "${NERV_FILE}/paas"
+  },
+  "snapshots": {
+    "/api/snapshots": "${NERV_FILE}/snapshots",
+    "/api/meta_snapshots": "${NERV_FILE}/meta_snapshots"
+  },
+  "file_storage_path": "/root/nerv-file-store",
+  "log": {
+    "logName": "./log/app.log",
+    "rotationSize": "10M",
+    "maxAge": "336h",
+    "level": "debug"
+  }
+}

@@ -20,7 +20,7 @@
     "defaultAvatar": "resources/assets/avatar.jpeg"
   },
   "http": {
-    "port": 8081
+    "port": 3231
   },
   "log": {
     "logName": "./log/app.log",

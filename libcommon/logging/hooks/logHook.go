@@ -174,6 +174,8 @@ func (hook *NervLogHook) fileWrite(entry *logrus.Entry) error {
 	}
 
 	dir := filepath.Dir(path)
+	log.Println(path)
+	log.Println(dir)
 	errMDir := os.MkdirAll(dir, os.ModePerm)
 	if errMDir != nil {
 		log.Printf("create dir %v failed.\n", dir)

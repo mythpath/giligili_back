@@ -1,4 +1,4 @@
-package file
+package utils
 
 import (
 	"io/ioutil"
@@ -53,7 +53,7 @@ func (f *FileServer) GetFilesAndDirs(dirPath, filePattern string, depth int) (fi
 
 // GetLimitFilesAndDirs 获取指定文件夹下所有文件和文件夹路径
 func (f *FileServer) GetLimitFilesAndDirs(dirPath, filePattern string) (files, dirs []string, err error) {
-	return f.GetFilesAndDirs(dirPath,filePattern,1)
+	return f.GetFilesAndDirs(dirPath, filePattern, 1)
 }
 
 // GetAllFiles 层级遍历指定文件夹下所有文件，获取其中所有文件路径
