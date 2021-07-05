@@ -34,6 +34,8 @@ func main() {
 	container.Add(&serializer.SerializerService{}, "SerializerService", nil)
 	container.Add(&file.UploadServer{}, "UploadServer", nil)
 	container.Add(&snapshot.SnapshotServer{}, "SnapshotServer", nil)
+	container.Add(&file.FileRouting{}, "FileServer", nil)
+	container.Add(&snapshot.SnapshotServer{}, "SnapshotServer", nil)
 
 	container.Build()
 

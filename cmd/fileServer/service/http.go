@@ -35,6 +35,8 @@ func (h *Http) Init() error {
 
 	resourceLock := common.NewResourceLockBucket()
 	r := chi.NewRouter()
+	tmp := h.Config.GetMap("files")
+	h.Logger.Debugf("files topo: %+v", tmp)
 	for url, file := range h.Config.GetMap("files") {
 		dir := h.replace(file.(string))
 

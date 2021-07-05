@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"net/http"
 	"selfText/giligili_back/libcommon/brick"
+	"selfText/giligili_back/libcommon/logging"
 	"selfText/giligili_back/libcommon/net/http/rest/render"
 	"selfText/giligili_back/service/file/common"
 	"selfText/giligili_back/service/file/file"
 	"strings"
 
 	"github.com/go-chi/chi"
-	"github.com/sirupsen/logrus"
 )
 
 var (
@@ -19,6 +19,7 @@ var (
 )
 
 type SnapshotServer struct {
+	Logger  *logging.LoggerService `inject:"LoggerService"`
 }
 
 func (p *SnapshotServer) Init(r *chi.Mux, config brick.Config,
@@ -51,7 +52,7 @@ func (p *SnapshotServer) Init(r *chi.Mux, config brick.Config,
 			if err != nil {
 				render.Status(r, http.StatusBadRequest)
 				render.TextJSON(w, r, fmt.Sprintf("error url: %s, err: %s", r.URL.Path, err.Error()))
-				logrus.Infof("failed to get real url, url:%s, err:%v", r.URL.Path, err)
+				p.Logger.Infof("failed to get real url, url:%s, err:%v", r.URL.Path, err)
 				return
 			}
 			handle.url = l
@@ -60,7 +61,7 @@ func (p *SnapshotServer) Init(r *chi.Mux, config brick.Config,
 			if err != nil {
 				render.Status(r, http.StatusBadRequest)
 				render.TextJSON(w, r, fmt.Sprintf("error url: %s, err: %s", r.URL.Path, err.Error()))
-				logrus.Infof("failed to get workspace handle, url:%s, err:%v", r.URL.Path, err)
+				p.Logger.Infof("failed to get workspace handle, url:%s, err:%v", r.URL.Path, err)
 				return
 			}
 
@@ -72,7 +73,7 @@ func (p *SnapshotServer) Init(r *chi.Mux, config brick.Config,
 			handle.Delete(w, r)
 		}))
 
-		logrus.Infof("snapshot router: %s -> %s", snapshotRoute, sv)
+		p.Logger.Infof("snapshot router: %s -> %s", snapshotRoute, sv)
 	})
 
 	// /api/meta_snapshots
@@ -83,7 +84,7 @@ func (p *SnapshotServer) Init(r *chi.Mux, config brick.Config,
 			fs.Get(w, r)
 		}))
 
-		logrus.Infof("meta snapshot router: %s -> %s", metaSnapshotRoute, msv)
+		p.Logger.Infof("meta snapshot router: %s -> %s", metaSnapshotRoute, msv)
 	})
 
 	return nil

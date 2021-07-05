@@ -4,3 +4,10 @@
 .DS_Store
 */*.log
 log
+
+/resources/documents/*
+/resources/movies/*
+/resources/pictures/*
+
+docker-compose.yml
+fabfile.py
